@@ -1,6 +1,6 @@
 # 🚀 Lumi
 
-Um aplicativo Flutter feito pra vc não chumbar.
+Um aplicativo Flutter feito a partir do projeto ganhador do HackBarão 2025.
 
 -----
 
@@ -39,18 +39,8 @@ Cada desenvolvedor só precisa gerar seu próprio arquivo local de configuraçã
 Execute:
 
 ```bash
-flutterfire configure --project=<id-do-projeto-do-caio> #pegue o id com o Caio ou no Grupo do Wzp
+flutterfire configure --project=lumi-7ae93
 ```
-
-Isso criará automaticamente o arquivo:
-
-  - `lib/firebase_options.dart`
-
-⚠️ **Atenção:**
-
-  - O arquivo `lib/firebase_options.dart` é gerado localmente e **não deve** ser commitado.
-  - Ele já está no `.gitignore` para evitar conflitos entre ambientes.
-  - Todos os outros arquivos de configuração Firebase (como `google-services.json` e `firebase.json`) devem permanecer versionados no repositório.
 
 ### 4️⃣ Executando o app
 
