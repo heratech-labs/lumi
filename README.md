@@ -55,6 +55,7 @@ Certifique-se de ter um emulador Android aberto ou um dispositivo conectado via 
 
 ## 🔗 Recursos úteis
 
+  - [☑ Guia de Desenvolvimento e Arquitetura](devGuide.md)
   - [Documentação FlutterFire](https://firebase.flutter.dev/docs/overview)
   - [Guia oficial Flutter](https://flutter.dev/docs)
   - [Firebase Console](https://console.firebase.google.com/)
