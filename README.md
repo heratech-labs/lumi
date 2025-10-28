@@ -26,7 +26,7 @@ dart pub global activate flutterfire_cli
 Clone o repositório e acesse o diretório do projeto:
 
 ```bash
-git clone https://github.com/pedroestevaodev/lumi.git
+git clone https://github.com/heratech-labs/lumi.git
 cd lumi
 flutter pub get
 ```
