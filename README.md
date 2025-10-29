@@ -42,6 +42,9 @@ Execute:
 flutterfire configure --project=lumi-7ae93
 ```
 
+obs: SELECIONAR TODAS AS OPÇÕES DE DESENVOLVIMENTO!!!
+![EXEMPLO]](image.png)
+
 ### 4️⃣ Executando o app
 
 Para rodar o aplicativo em modo debug:
