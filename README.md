@@ -43,7 +43,7 @@ flutterfire configure --project=lumi-7ae93
 ```
 
 obs: SELECIONAR TODAS AS OPÇÕES DE DESENVOLVIMENTO!!!
-![EXEMPLO]](image.png)
+![EXEMPLO]](/image.png)
 
 ### 4️⃣ Executando o app
 
