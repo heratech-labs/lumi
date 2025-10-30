@@ -18,7 +18,7 @@ class LumiLogo extends StatelessWidget {
           width: width ?? 120,
           height: height ?? 120,
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(

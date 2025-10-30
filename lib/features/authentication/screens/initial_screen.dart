@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../common/widgets/images/lumi_logo.dart';
-import '../../../common/widgets/text/screen_title.dart';
-import '../../../common/widgets/text/body_text.dart';
+import '../../../app/config/app_routes.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/secondary_button.dart';
+import '../../../common/widgets/images/lumi_logo.dart';
+import '../../../common/widgets/text/body_text.dart';
+import '../../../common/widgets/text/screen_title.dart';
 
 class InitialScreen extends StatelessWidget {
   const InitialScreen({super.key});
@@ -40,7 +41,7 @@ class InitialScreen extends StatelessWidget {
               PrimaryActionButton(
                 label: 'Vamos Começar',
                 onPressed: () {
-                  debugPrint('Navegando para onboarding...');
+                  Navigator.pushNamed(context, AppRoutes.moodEntry);
                 },
               ),
 
@@ -49,7 +50,7 @@ class InitialScreen extends StatelessWidget {
               SecondaryButton(
                 label: 'Já tenho uma conta',
                 onPressed: () {
-                  debugPrint('Navegando para login...');
+                  Navigator.pushNamed(context, AppRoutes.authForm);
                 },
               ),
 
