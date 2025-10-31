@@ -7,9 +7,6 @@ import 'features/authentication/screens/initial_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   await firebase.Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
