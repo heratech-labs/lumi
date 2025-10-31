@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase;
 import 'app/config/app_routes.dart';
 import 'firebase_options.dart';
-import 'features/authentication/screens/initial_screen.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
