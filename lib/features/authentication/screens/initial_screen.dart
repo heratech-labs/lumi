@@ -41,7 +41,7 @@ class InitialScreen extends StatelessWidget {
               PrimaryActionButton(
                 label: 'Vamos Começar',
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.moodEntry);
+                  Navigator.pushNamed(context, AppRoutes.register);
                 },
               ),
 
@@ -50,7 +50,7 @@ class InitialScreen extends StatelessWidget {
               SecondaryButton(
                 label: 'Já tenho uma conta',
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.authForm);
+                  Navigator.pushNamed(context, AppRoutes.login);
                 },
               ),
 

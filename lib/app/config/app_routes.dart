@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-
-import '../../features/authentication/screens/auth_form_screen.dart';
 import '../../features/authentication/screens/initial_screen.dart';
 import '../../features/home/screens/home_screen.dart';
 import '../../features/mood_tracker/screens/mood_entry_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
+import '../../features/home/screens/register.dart';
+import '../../features/home/screens/login.dart';
 
 class AppRoutes {
   static const String initial = '/';
-  static const String authForm = '/auth';
   static const String home = '/home';
   static const String moodEntry = '/mood';
   static const String profile = '/profile';
+  static const String register = '/register';
+  static const String login = '/login';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
       initial: (context) => const InitialScreen(),
-      authForm: (context) => const AuthFormScreen(),
       home: (context) => const HomeScreen(),
       moodEntry: (context) => const MoodEntryScreen(),
       profile: (context) => const ProfileScreen(),
+      register: (context) => const RegisterScreen(),
+      login: (context) => const LoginScreen(),
     };
   }
 
