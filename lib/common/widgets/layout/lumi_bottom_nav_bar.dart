@@ -30,7 +30,6 @@ class LumiBottomNavBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // Home (Esquerda)
                   _NavBarItem(
                     icon: Icons.home_rounded,
                     label: 'Home',
@@ -56,7 +55,6 @@ class LumiBottomNavBar extends StatelessWidget {
           bottom: 25,
           child: GestureDetector(
             onTap: () {
-              // Ação do botão SOS
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Botão SOS - CVV 188'),
