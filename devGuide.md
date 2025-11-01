@@ -97,7 +97,7 @@ Esta é a divisão de responsabilidades. Cada membro/dupla é responsável por c
 
 * **Widgets Específicos da Tela (dentro de `lib/features/home/widgets/`):**
 
-  * `lib/features/home/widgets/daily_suggestion_card.dart`
+  * `lib/features/home/widgets/inspiration_card.dart`
 
   * `lib/features/home/widgets/content_carousel.dart` (para Músicas, Filmes, Livros)
 
