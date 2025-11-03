@@ -3,6 +3,7 @@ import '../../../common/widgets/form_fields/email_form_field.dart';
 import '../../../common/widgets/form_fields/password_form_field.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/google_sign_in_button.dart';
+import '../../../common/services/auth_service.dart';
 
 /// Tela de Login do Lumi
 ///
@@ -33,9 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      appBar: AppBar(title: const Text('Login')),
       resizeToAvoidBottomInset: true, // Evita overflow com teclado
       body: Center(
         child: SingleChildScrollView(
@@ -54,9 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Que bom te ver novamente!',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -92,23 +91,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Entrar',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // --- Aqui chamar função já implementada ---
-                        // Exemplo:
-                        // final success = await AuthService.signInWithEmail(
-                        //   _emailController.text,
-                        //   _passwordController.text,
-                        // );
-                        // if (success) {
-                        //   Navigator.pushNamed(context, AppRoutes.moodEntry);
-                        // } else {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(content: Text('Email ou senha incorretos')),
-                        //   );
-                        // }
-
-                        debugPrint(
-                          'Botão Entrar clicado - backend deve implementar login com email e senha',
-                        );
+                        try {
+                          final authService = AuthService();
+                          await authService.signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/mood_entry',
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
+                        }
                       }
                     },
                   ),
@@ -128,20 +129,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Botão de Login com Google
                   // ===============================
                   GoogleSignInButton(
-                    onPressed: () async {
-                      // --- Aqui chamar função já implementada ---
-                      // Exemplo:
-                      // final success = await AuthService.signInWithGoogle();
-                      // if (success) {
-                      //   Navigator.pushNamed(context, AppRoutes.moodEntry);
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     const SnackBar(content: Text('Falha no login com Google')),
-                      //   );
-                      // }
-
-                      debugPrint(
-                        'Login com Google clicado - backend deve implementar',
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'O login com Google ainda não está disponível. Por favor, use email e senha.',
+                          ),
+                        ),
                       );
                     },
                   ),
