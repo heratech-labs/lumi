@@ -19,6 +19,9 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  
+  <!-- Google Sign-in -->
+  <meta name="google-signin-client_id" content="731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -33,6 +36,37 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js"></script>
+
+  <script>
+    window.flutterfire_web_sdk_initialized = false;
+    window.flutter_inappwebview_web_sdk_initialized = false;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBdvTCOodL1E63CAZP8Mn81bAa7SRu7Kd8",
+        authDomain: "lumi-7ae93.firebaseapp.com",
+        projectId: "lumi-7ae93",
+        storageBucket: "lumi-7ae93.appspot.com",
+        messagingSenderId: "731654279937",
+        appId: "1:731654279937:web:67cf5e1364b3600377c100",
+        measurementId: "G-QL904E9NYQ"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      
+      // Log initialization
+      console.log('Firebase initialized in index.html');
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

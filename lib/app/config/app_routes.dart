@@ -9,7 +9,7 @@ import '../../features/home/screens/login.dart';
 class AppRoutes {
   static const String initial = '/';
   static const String home = '/home';
-  static const String moodEntry = '/mood';
+  static const String moodEntry = '/mood_entry';
   static const String profile = '/profile';
   static const String register = '/register';
   static const String login = '/login';

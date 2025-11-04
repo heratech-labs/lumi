@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../app/config/app_routes.dart';
 import '../../../common/widgets/form_fields/email_form_field.dart';
 import '../../../common/widgets/form_fields/password_form_field.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/google_sign_in_button.dart';
 import '../widgets/password_requirements.dart';
+import '../../../common/services/auth_service.dart';
 
 /// Tela de Cadastro do Lumi
 ///
@@ -93,13 +95,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // ===============================
                     PrimaryActionButton(
                       label: 'Criar conta',
-                      onPressed: () {
-                        // --- Aqui chamar função já implementada ---
-                        // AuthService.registerWithEmail(email: ..., password: ...)
-                        // NÃO implementar lógica manual de cadastro aqui
-                        debugPrint(
-                          'Botão Criar Conta clicado - chamar AuthService.registerWithEmail',
-                        );
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            final authService = AuthService();
+                            await authService.registerWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            );
+                            if (mounted) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.moodEntry,
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            }
+                          }
+                        }
                       },
                     ),
 
@@ -119,12 +136,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // ===============================
                     GoogleSignInButton(
                       label: 'Continuar com o Google',
-                      onPressed: () {
-                        // --- Aqui chamar função já implementada ---
-                        // AuthService.signInWithGoogle()
-                        debugPrint(
-                          'Login com Google clicado - chamar AuthService.signInWithGoogle',
-                        );
+                      onPressed: () async {
+                        try {
+                          final authService = AuthService();
+                          await authService.signInWithGoogle();
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRoutes.moodEntry,
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
                       },
                     ),
                   ],

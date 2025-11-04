@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart' as firebase;
+
+import 'package:firebase_core/firebase_core.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'app/config/app_routes.dart';
+
 import 'firebase_options.dart';
 
-  await firebase.Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    print('Iniciando configuração do Firebase...');
+
+    final options = DefaultFirebaseOptions.currentPlatform;
+
+    print('Opções do Firebase: $options');
+
+    await Firebase.initializeApp(options: options);
+
+    print('Firebase inicializado com sucesso!');
+
+    final auth = FirebaseAuth.instance;
+
+    print('Auth state: ${auth.currentUser}');
+  } catch (e, stackTrace) {
+    print('Erro ao inicializar Firebase: $e');
+
+    print('Stack trace: $stackTrace');
+  }
 
   runApp(const MyApp());
 }
