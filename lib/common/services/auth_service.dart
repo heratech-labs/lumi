@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -89,40 +90,41 @@ class AuthService {
   Future<UserCredential> signInWithGoogle() async {
     try {
       print('Iniciando login com Google...');
+      // On web, prefer the Firebase popup flow which opens a browser popup
+      // and returns the UserCredential directly. On mobile, use the
+      // GoogleSignIn plugin flow which obtains tokens and signs in with
+      // credentials.
+      if (kIsWeb) {
+        print('Usando signInWithPopup para web');
+        final provider = GoogleAuthProvider();
+        final UserCredential result = await _auth.signInWithPopup(provider);
+        print('Login com Google (web) realizado: ${result.user?.uid}');
+        return result;
+      }
 
-      // Trigger do fluxo de autenticação do Google
-
+      // Mobile / non-web flow using google_sign_in plugin
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      // Se o usuário cancelar o login, lança exceção
-
+      // If the user cancels the sign-in, throw a friendly message
       if (googleUser == null) {
         throw 'Login com Google cancelado pelo usuário';
       }
 
       print('Usuário Google selecionado: ${googleUser.email}');
 
-      // Obter detalhes da autenticação do usuário
-
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      // Criar credencial do Firebase
-
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, // <-- CORRETO
+        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Entrar no Firebase com a credencial do Google
-
-      final UserCredential userCredential = await _auth.signInWithCredential(
-        credential,
-      );
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
 
       print(
-        'Login com Google realizado com sucesso: ${userCredential.user?.uid}',
-      );
+          'Login com Google realizado com sucesso: ${userCredential.user?.uid}');
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

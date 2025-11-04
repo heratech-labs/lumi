@@ -29,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>(); // Chave do formulário
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Que bom te ver novamente!',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -80,7 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   // ===============================
                   PasswordField(
                     controller: _passwordController,
-                    onChanged: (val) => setState(() => _password = val),
                   ),
                   const SizedBox(height: 24),
 
@@ -129,14 +127,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Botão de Login com Google
                   // ===============================
                   GoogleSignInButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'O login com Google ainda não está disponível. Por favor, use email e senha.',
-                          ),
-                        ),
-                      );
+                    onPressed: () async {
+                      final authService = AuthService();
+                      try {
+                        await authService.signInWithGoogle();
+                        if (mounted) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/mood_entry',
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                        }
+                      }
                     },
                   ),
                 ],
