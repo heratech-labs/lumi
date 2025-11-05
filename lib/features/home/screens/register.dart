@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/config/app_routes.dart';
 import '../../../common/widgets/form_fields/email_form_field.dart';
 import '../../../common/widgets/form_fields/password_form_field.dart';
+import '../../../common/widgets/form_fields/name_form_field.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/google_sign_in_button.dart';
 import '../widgets/password_requirements.dart';
@@ -28,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   String _password = '';
 
   @override
@@ -70,6 +72,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
+
+                    NameField(
+                      controller: _nameController,
+                      onChanged: (value) {},
+                      hintText: 'Digite seu nome completo',
+                    ),
+                    const SizedBox(height: 16),
+
+                    const SizedBox(height: 16),
 
                     // ===============================
                     // Campo de E-mail
