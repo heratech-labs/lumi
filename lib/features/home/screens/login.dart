@@ -89,25 +89,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Entrar',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        try {
-                          final authService = AuthService();
-                          await authService.signInWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          );
-                          if (mounted) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              '/mood_entry',
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
-                        }
+                        // try {
+                        //   final authService = AuthService();
+                        //   await authService.signInWithEmailAndPassword(
+                        //     email: _emailController.text,
+                        //     password: _passwordController.text,
+                        //   );
+                        //   if (mounted) {
+                        //     Navigator.pushReplacementNamed(
+                        //       context,
+                        //       '/mood_entry',
+                        //     );
+                        //   }
+                        // } catch (e) {
+                        //   if (mounted) {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(content: Text(e.toString())),
+                        //     );
+                        //   }
+                        // }
                       }
                     },
                   ),
@@ -128,22 +128,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   // ===============================
                   GoogleSignInButton(
                     onPressed: () async {
-                      final authService = AuthService();
-                      try {
-                        await authService.signInWithGoogle();
-                        if (mounted) {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            '/mood_entry',
-                          );
-                        }
-                      } catch (e) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        }
-                      }
+                      // final authService = AuthService();
+                      // try {
+                      //   await authService.signInWithGoogle();
+                      //   if (mounted) {
+                      //     Navigator.pushReplacementNamed(
+                      //       context,
+                      //       '/mood_entry',
+                      //     );
+                      //   }
+                      // } catch (e) {
+                      //   if (mounted) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       SnackBar(content: Text(e.toString())),
+                      //     );
+                      //   }
+                      // }
                     },
                   ),
                 ],

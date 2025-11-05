@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../features/authentication/screens/initial_screen.dart';
 import '../../features/home/screens/home_screen.dart';
 import '../../features/mood_tracker/screens/mood_entry_screen.dart';
-import '../../features/profile/screens/profile_screen.dart';
+import '../../features/profile/screens/user_profile_screen.dart';
 import '../../features/home/screens/register.dart';
 import '../../features/home/screens/login.dart';
 
@@ -19,7 +19,7 @@ class AppRoutes {
       initial: (context) => const InitialScreen(),
       home: (context) => const HomeScreen(),
       moodEntry: (context) => const MoodEntryScreen(),
-      profile: (context) => const ProfileScreen(),
+      profile: (context) => const UserProfileScreen(),
       register: (context) => const RegisterScreen(),
       login: (context) => const LoginScreen(),
     };

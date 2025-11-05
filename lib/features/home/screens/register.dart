@@ -98,11 +98,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            final authService = AuthService();
-                            await authService.registerWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            );
+                            // final authService = AuthService();
+                            // await authService.registerWithEmailAndPassword(
+                            //   email: _emailController.text,
+                            //   password: _passwordController.text,
+                            // );
                             if (mounted) {
                               Navigator.pushReplacementNamed(
                                 context,
@@ -137,25 +137,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     GoogleSignInButton(
                       label: 'Continuar com o Google',
                       onPressed: () async {
-                        try {
-                          final authService = AuthService();
-                          await authService.signInWithGoogle();
-                          if (mounted) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              AppRoutes.moodEntry,
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.toString()),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        }
+                        // try {
+                        //   final authService = AuthService();
+                        //   await authService.signInWithGoogle();
+                        //   if (mounted) {
+                        //     Navigator.pushReplacementNamed(
+                        //       context,
+                        //       AppRoutes.moodEntry,
+                        //     );
+                        //   }
+                        // } catch (e) {
+                        //   if (mounted) {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(
+                        //         content: Text(e.toString()),
+                        //         backgroundColor: Colors.red,
+                        //       ),
+                        //     );
+                        //   }
+                        // }
                       },
                     ),
                   ],

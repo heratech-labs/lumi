@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/secondary_button.dart';
-import '../../../common/widgets/text/body_text.dart';
-import '../../../common/widgets/text/screen_title.dart';
 import '../../../common/widgets/images/lumi_logo.dart';
 
 class UserProfileScreen extends StatelessWidget {
