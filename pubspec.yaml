@@ -42,6 +42,7 @@ flutter:
   assets:
     - assets/images/lumi_logo.png
     - assets/images/daily_sugestion.png
+    - assets/images/google_logo.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

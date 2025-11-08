@@ -151,25 +151,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     GoogleSignInButton(
                       label: 'Continuar com o Google',
                       onPressed: () async {
-                        try {
-                          final authService = AuthService();
-                          await authService.signInWithGoogle();
-                          if (mounted) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              AppRoutes.moodEntry,
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.toString()),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        }
+                        // try {
+                        //   final authService = AuthService();
+                        //   await authService.signInWithGoogle();
+                        //   if (mounted) {
+                        //     Navigator.pushReplacementNamed(
+                        //       context,
+                        //       AppRoutes.moodEntry,
+                        //     );
+                        //   }
+                        // } catch (e) {
+                        //   if (mounted) {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(
+                        //         content: Text(e.toString()),
+                        //         backgroundColor: Colors.red,
+                        //       ),
+                        //     );
+                        //   }
+                        // }
                       },
                     ),
                   ],

@@ -16,7 +16,7 @@ class GoogleSignInButton extends StatelessWidget {
     return SecondaryButton(
       label: label, // <-- usa o parâmetro, não hardcoded
       icon: Image.asset(
-        '../../../../assets/images/google_logo.webp', // logo oficial
+        'assets/images/google_logo.webp', // Caminho correto do asset
         height: 24,
       ),
       onPressed: onPressed,

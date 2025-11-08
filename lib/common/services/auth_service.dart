@@ -6,12 +6,12 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'https://www.googleapis.com/auth/userinfo.profile'],
+  // final GoogleSignIn _googleSignIn = GoogleSignIn(
+  //   scopes: ['email', 'https://www.googleapis.com/auth/userinfo.profile'],
 
-    clientId:
-        '731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com', // Opcional: pode ser definido aqui também
-  );
+  //   clientId:
+  //       '731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com', // Opcional: pode ser definido aqui também
+  // );
 
   // Stream para monitorar mudanças no estado de autenticação
 
@@ -87,60 +87,60 @@ class AuthService {
 
   // Login com Google
 
-  Future<UserCredential> signInWithGoogle() async {
-    try {
-      print('Iniciando login com Google...');
-      // On web, prefer the Firebase popup flow which opens a browser popup
-      // and returns the UserCredential directly. On mobile, use the
-      // GoogleSignIn plugin flow which obtains tokens and signs in with
-      // credentials.
-      if (kIsWeb) {
-        print('Usando signInWithPopup para web');
-        final provider = GoogleAuthProvider();
-        final UserCredential result = await _auth.signInWithPopup(provider);
-        print('Login com Google (web) realizado: ${result.user?.uid}');
-        return result;
-      }
+  // Future<UserCredential> signInWithGoogle() async {
+  //   try {
+  //     print('Iniciando login com Google...');
+  //     // On web, prefer the Firebase popup flow which opens a browser popup
+  //     // and returns the UserCredential directly. On mobile, use the
+  //     // GoogleSignIn plugin flow which obtains tokens and signs in with
+  //     // credentials.
+  //     if (kIsWeb) {
+  //       print('Usando signInWithPopup para web');
+  //       final provider = GoogleAuthProvider();
+  //       final UserCredential result = await _auth.signInWithPopup(provider);
+  //       print('Login com Google (web) realizado: ${result.user?.uid}');
+  //       return result;
+  //     }
 
-      // Mobile / non-web flow using google_sign_in plugin
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  //     // Mobile / non-web flow using google_sign_in plugin
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      // If the user cancels the sign-in, throw a friendly message
-      if (googleUser == null) {
-        throw 'Login com Google cancelado pelo usuário';
-      }
+  //     // If the user cancels the sign-in, throw a friendly message
+  //     if (googleUser == null) {
+  //       throw 'Login com Google cancelado pelo usuário';
+  //     }
 
-      print('Usuário Google selecionado: ${googleUser.email}');
+  //     print('Usuário Google selecionado: ${googleUser.email}');
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
 
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+  //     final UserCredential userCredential =
+  //         await _auth.signInWithCredential(credential);
 
-      print(
-          'Login com Google realizado com sucesso: ${userCredential.user?.uid}');
+  //     print(
+  //         'Login com Google realizado com sucesso: ${userCredential.user?.uid}');
 
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      print('Erro no Firebase Auth: ${e.code} - ${e.message}');
+  //     return userCredential;
+  //   } on FirebaseAuthException catch (e) {
+  //     print('Erro no Firebase Auth: ${e.code} - ${e.message}');
 
-      print('Stack trace: ${StackTrace.current}');
+  //     print('Stack trace: ${StackTrace.current}');
 
-      throw _handleAuthException(e);
-    } catch (e) {
-      print('Erro no login com Google: $e');
+  //     throw _handleAuthException(e);
+  //   } catch (e) {
+  //     print('Erro no login com Google: $e');
 
-      print('Stack trace: ${StackTrace.current}');
+  //     print('Stack trace: ${StackTrace.current}');
 
-      throw 'Erro ao fazer login com Google: $e';
-    }
-  }
+  //     throw 'Erro ao fazer login com Google: $e';
+  //   }
+  // }
 
   // Logout
 
