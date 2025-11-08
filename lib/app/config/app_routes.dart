@@ -19,7 +19,6 @@ class AppRoutes {
       initial: (context) => const InitialScreen(),
       home: (context) => const HomeScreen(),
       moodEntry: (context) => const MoodEntryScreen(),
-      profile: (context) => const ProfileScreen(),
       register: (context) => const RegisterScreen(),
       login: (context) => const LoginScreen(),
     };

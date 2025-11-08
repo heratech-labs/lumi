@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'password_validator.dart'; // Arquivo sugerido para validação centralizada
+import '../../validators/password_validator.dart';
 
 /// ------------------------------
 /// Campo de Senha
@@ -14,6 +14,8 @@ class PasswordField extends StatefulWidget {
   final Function(String)? onChanged;
   final FocusNode? focusNode; // Para navegação entre campos
   final FocusNode? nextFocusNode;
+  final bool
+      useStrictValidation; // Se true, usa validação completa (requisitos); se false, apenas verifica se não está vazio
 
   const PasswordField({
     super.key,
@@ -22,6 +24,8 @@ class PasswordField extends StatefulWidget {
     this.onChanged,
     this.focusNode,
     this.nextFocusNode,
+    this.useStrictValidation =
+        false, // Por padrão, apenas valida se não está vazio
   });
 
   @override
@@ -49,14 +53,23 @@ class _PasswordFieldState extends State<PasswordField> {
       textCapitalization: TextCapitalization.none,
       autofillHints: const [AutofillHints.password],
       onChanged: widget.onChanged, // Atualiza visualmente PasswordRequirements
-      // validator: PasswordValidator.validate, // Validação centralizada
+      validator: widget.useStrictValidation
+          ? PasswordValidator
+              .validateWithMessage // Validação completa (registro)
+          : (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor, insira sua senha';
+              }
+              return null;
+            }, // Validação básica (login)
       decoration: InputDecoration(
         labelText: widget.label,
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(57, 57, 57, 1), width: 2),
+          borderSide:
+              BorderSide(color: Color.fromRGBO(57, 57, 57, 1), width: 2),
         ),
         errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
         suffixIcon: IconButton(

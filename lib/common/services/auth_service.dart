@@ -21,7 +21,7 @@ class AuthService {
 
   Future<UserCredential> registerWithEmailAndPassword({
     required String email,
-    required String password,
+    required String password, required displayName,
   }) async {
     try {
       print('Iniciando registro de usuário...');
