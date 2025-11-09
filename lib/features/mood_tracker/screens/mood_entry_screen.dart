@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../common/services/date_formatter.dart';
 import '../../../common/widgets/form_fields/multiline_text_field.dart';
@@ -31,7 +32,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const displayName = 'Pedro E.';
+    // Obter nome do usuário do Firebase Auth
+    final user = FirebaseAuth.instance.currentUser;
+    final displayName = user?.displayName ?? 'Usuário';
     final firstName = displayName.split(' ').first;
 
     return Scaffold(
@@ -53,9 +56,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
               Text(
                 'How do you feel today?',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w600,
-                ),
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               const SizedBox(height: 32),
               WelcomeHeader(userName: firstName, dateLabel: _todayLabel),
@@ -63,9 +66,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
               Text(
                 'Como você está se sentindo hoje?',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.grey.shade900,
-                ),
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade900,
+                    ),
               ),
               const SizedBox(height: 14),
               MultilineTextField(

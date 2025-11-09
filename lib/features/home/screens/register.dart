@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import '../../../app/config/app_routes.dart';
 import '../../../common/widgets/form_fields/email_form_field.dart';
@@ -29,8 +31,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final _nameController = TextEditingController();
   String _password = '';
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +107,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     PasswordField(
                       controller: _passwordController,
                       onChanged: (val) => setState(() => _password = val),
+                      useStrictValidation:
+                          true, // Validação completa para registro
                     ),
                     const SizedBox(height: 16),
                     PasswordRequirements(password: _password), //regras de senha
@@ -109,11 +121,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            // final authService = AuthService();
-                            // await authService.registerWithEmailAndPassword(
-                            //   email: _emailController.text,
-                            //   password: _passwordController.text,
-                            // );
+                            final authService = AuthService();
+                            await authService.registerWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              displayName: _nameController.text.trim(),
+                            );
                             if (mounted) {
                               Navigator.pushReplacementNamed(
                                 context,
