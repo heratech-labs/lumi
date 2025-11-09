@@ -6,18 +6,7 @@ import '../../../common/widgets/buttons/google_sign_in_button.dart';
 import '../../../common/services/auth_service.dart';
 
 /// Tela de Login do Lumi
-///
-/// Observações gerais:
-/// - Esta tela lida apenas com UI, validação local e navegação.
-/// - Toda lógica de autenticação deve ser implementada em AuthService.dart
-///   ou outro serviço separado.
-/// - É responsabilidade do backend retornar sucesso/falha e mensagens específicas.
-///
-/// Pendências para implementação:
-/// - Chamar `AuthService.signInWithEmail(email, password)` ao clicar em "Entrar".
-/// - Chamar `AuthService.signInWithGoogle()` ao clicar em "Continuar com Google".
-/// - Exibir mensagens de erro específicas (email ou senha incorretos).
-/// - Redirecionar para a tela principal (mood_entry_screen) após login bem-sucedido.
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -89,25 +78,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Entrar',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // try {
-                        //   final authService = AuthService();
-                        //   await authService.signInWithEmailAndPassword(
-                        //     email: _emailController.text,
-                        //     password: _passwordController.text,
-                        //   );
-                        //   if (mounted) {
-                        //     Navigator.pushReplacementNamed(
-                        //       context,
-                        //       '/mood_entry',
-                        //     );
-                        //   }
-                        // } catch (e) {
-                        //   if (mounted) {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(content: Text(e.toString())),
-                        //     );
-                        //   }
-                        // }
+                        try {
+                          final authService = AuthService();
+                          await authService.signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/mood_entry',
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
+                        }
                       }
                     },
                   ),
@@ -128,22 +117,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   // ===============================
                   GoogleSignInButton(
                     onPressed: () async {
-                      // final authService = AuthService();
-                      // try {
-                      //   await authService.signInWithGoogle();
-                      //   if (mounted) {
-                      //     Navigator.pushReplacementNamed(
-                      //       context,
-                      //       '/mood_entry',
-                      //     );
-                      //   }
-                      // } catch (e) {
-                      //   if (mounted) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       SnackBar(content: Text(e.toString())),
-                      //     );
-                      //   }
-                      // }
+                      print('GoogleSignInButton pressed (login)');
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Iniciando login com Google...')),
+                        );
+                      }
+                      final authService = AuthService();
+                      try {
+                        await authService.signInWithGoogle();
+                        if (mounted) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/mood_entry',
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                        }
+                      }
                     },
                   ),
                 ],

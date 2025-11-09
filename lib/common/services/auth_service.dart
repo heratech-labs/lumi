@@ -1,190 +1,235 @@
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-// class AuthService {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-//   final GoogleSignIn _googleSignIn = GoogleSignIn(
-//     scopes: ['email', 'https://www.googleapis.com/auth/userinfo.profile'],
+  // A API do `google_sign_in` passou a expor um singleton `GoogleSignIn.instance`
+  // e um método `initialize`. Vamos usar um flag para inicializar apenas uma vez.
+  static bool _googleInitialized = false;
 
-//     clientId:
-//         '731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com', // Opcional: pode ser definido aqui também
-//   );
+  // Stream para monitorar mudanças no estado de autenticação
 
-//   // Stream para monitorar mudanças no estado de autenticação
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-//   Stream<User?> get authStateChanges => _auth.authStateChanges();
+  // Registro com email e senha
 
-//   // Registro com email e senha
+  Future<UserCredential> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+    String? displayName,
+  }) async {
+    try {
+      print('Iniciando registro de usuário...');
 
-//   Future<UserCredential> registerWithEmailAndPassword({
-//     required String email,
-//     required String password,
-//   }) async {
-//     try {
-//       print('Iniciando registro de usuário...');
+      print('Firebase Auth instance: ${_auth.hashCode}');
 
-//       print('Firebase Auth instance: ${_auth.hashCode}');
+      print('Tentando criar usuário com email: $email');
 
-//       print('Tentando criar usuário com email: $email');
+      // Verificar estado atual do Firebase
 
-//       // Verificar estado atual do Firebase
+      print('Usuário atual: ${_auth.currentUser}');
 
-//       print('Usuário atual: ${_auth.currentUser}');
+      print(
+        'Auth state changes listener ativo: ${_auth.authStateChanges().isBroadcast}',
+      );
 
-//       print(
-//         'Auth state changes listener ativo: ${_auth.authStateChanges().isBroadcast}',
-//       );
+      final result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-//       final result = await _auth.createUserWithEmailAndPassword(
-//         email: email,
-//         password: password,
-//       );
+      // Se foi fornecido um displayName, atualiza o perfil do usuário
+      if (displayName != null && displayName.isNotEmpty) {
+        try {
+          await result.user?.updateDisplayName(displayName);
+          // Recarrega o usuário para garantir que as mudanças sejam visíveis
+          await result.user?.reload();
+        } catch (e) {
+          // Falha ao atualizar displayName não deve impedir o registro
+          print('Falha ao atualizar displayName: $e');
+        }
+      }
 
-//       print('Usuário criado com sucesso: ${result.user?.uid}');
+      print('Usuário criado com sucesso: ${result.user?.uid}');
 
-//       return result;
-//     } on FirebaseAuthException catch (e) {
-//       print('Erro no Firebase Auth: ${e.code} - ${e.message}');
+      return result;
+    } on FirebaseAuthException catch (e) {
+      print('Erro no Firebase Auth: ${e.code} - ${e.message}');
 
-//       print('Stack trace: ${StackTrace.current}');
+      print('Stack trace: ${StackTrace.current}');
 
-//       throw _handleAuthException(e);
-//     } catch (e) {
-//       print('Erro não esperado: $e');
+      throw _handleAuthException(e);
+    } catch (e) {
+      print('Erro não esperado: $e');
 
-//       print('Stack trace: ${StackTrace.current}');
+      print('Stack trace: ${StackTrace.current}');
 
-//       rethrow;
-//     }
-//   }
+      rethrow;
+    }
+  }
 
-//   // Login com email e senha
+  // Login com email e senha
 
-//   Future<UserCredential> signInWithEmailAndPassword({
-//     required String email,
-//     required String password,
-//   }) async {
-//     try {
-//       print('Tentando fazer login com email: $email');
+  Future<UserCredential> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      print('Tentando fazer login com email: $email');
 
-//       final result = await _auth.signInWithEmailAndPassword(
-//         email: email,
-//         password: password,
-//       );
+      final result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-//       print('Login realizado com sucesso: ${result.user?.uid}');
+      print('Login realizado com sucesso: ${result.user?.uid}');
 
-//       return result;
-//     } on FirebaseAuthException catch (e) {
-//       print('Erro no Firebase Auth: ${e.code} - ${e.message}');
+      return result;
+    } on FirebaseAuthException catch (e) {
+      print('Erro no Firebase Auth: ${e.code} - ${e.message}');
 
-//       throw _handleAuthException(e);
-//     }
-//   }
+      throw _handleAuthException(e);
+    }
+  }
 
-//   // Login com Google
+  // Login com Google
 
-//   Future<UserCredential> signInWithGoogle() async {
-//     try {
-//       print('Iniciando login com Google...');
-//       // On web, prefer the Firebase popup flow which opens a browser popup
-//       // and returns the UserCredential directly. On mobile, use the
-//       // GoogleSignIn plugin flow which obtains tokens and signs in with
-//       // credentials.
-//       if (kIsWeb) {
-//         print('Usando signInWithPopup para web');
-//         final provider = GoogleAuthProvider();
-//         final UserCredential result = await _auth.signInWithPopup(provider);
-//         print('Login com Google (web) realizado: ${result.user?.uid}');
-//         return result;
-//       }
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      print('Iniciando login com Google...');
 
-//       // Mobile / non-web flow using google_sign_in plugin
-//       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (kIsWeb) {
+        print('Usando signInWithPopup para web');
+        final provider = GoogleAuthProvider();
+        final UserCredential result = await _auth.signInWithPopup(provider);
+        print('Login com Google (web) realizado: ${result.user?.uid}');
+        return result;
+      }
 
-//       // If the user cancels the sign-in, throw a friendly message
-//       if (googleUser == null) {
-//         throw 'Login com Google cancelado pelo usuário';
-//       }
+      // Mobile / non-web flow using google_sign_in plugin
+      // Initialize the GoogleSignIn singleton once, if necessary.
+      // No clientId for Android - it comes from google-services.json automatically
+      if (!_googleInitialized) {
+        try {
+          print('Inicializando Google Sign-In para mobile...');
+          await GoogleSignIn.instance.initialize(
+            // Para web, podemos passar clientId aqui se necessário
+            // Para Android/iOS, o clientId vem do google-services.json
+            clientId: kIsWeb
+                ? '731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com'
+                : null,
+          );
+          print('Google Sign-In inicializado com sucesso');
+        } catch (e) {
+          print(
+              'Erro ao inicializar Google Sign-In (pode já estar inicializado): $e');
+        }
+        _googleInitialized = true;
+      }
 
-//       print('Usuário Google selecionado: ${googleUser.email}');
+      print('Chamando authenticate...');
+      // Trigger interactive authentication
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+          .authenticate(scopeHint: [
+        'email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ]);
 
-//       final GoogleSignInAuthentication googleAuth =
-//           await googleUser.authentication;
+      print('Usuário Google selecionado: ${googleUser.email}');
 
-//       final credential = GoogleAuthProvider.credential(
-//         accessToken: googleAuth.accessToken,
-//         idToken: googleAuth.idToken,
-//       );
+      // The new API exposes an authentication object with an idToken. Use it
+      // to create Firebase credential.
+      final googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
 
-//       final UserCredential userCredential =
-//           await _auth.signInWithCredential(credential);
+      if (idToken == null) {
+        throw 'Não foi possível obter o token de autenticação do Google';
+      }
 
-//       print(
-//           'Login com Google realizado com sucesso: ${userCredential.user?.uid}');
+      print('Token obtido, criando credencial Firebase...');
+      final credential = GoogleAuthProvider.credential(
+        idToken: idToken,
+      );
 
-//       return userCredential;
-//     } on FirebaseAuthException catch (e) {
-//       print('Erro no Firebase Auth: ${e.code} - ${e.message}');
+      print('Fazendo login no Firebase com credencial Google...');
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
 
-//       print('Stack trace: ${StackTrace.current}');
+      print(
+          'Login com Google realizado com sucesso: ${userCredential.user?.uid}');
 
-//       throw _handleAuthException(e);
-//     } catch (e) {
-//       print('Erro no login com Google: $e');
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      print('Erro no Firebase Auth: ${e.code} - ${e.message}');
+      print('Stack trace: ${StackTrace.current}');
+      throw _handleAuthException(e);
+    } catch (e) {
+      print('Erro no login com Google: $e');
+      print('Tipo do erro: ${e.runtimeType}');
+      print('Stack trace: ${StackTrace.current}');
 
-//       print('Stack trace: ${StackTrace.current}');
+      // Tratamento específico para erros do Google Sign-In
+      final errorString = e.toString();
+      if (errorString.contains('canceled') ||
+          errorString.contains('cancelled')) {
+        throw 'Login cancelado pelo usuário';
+      } else if (errorString.contains('reauth failed') ||
+          errorString.contains('Account reauth failed')) {
+        throw 'Falha na autenticação. Verifique:\n1. Se o app está configurado no Firebase Console\n2. Se o SHA-1 foi adicionado no Firebase\n3. Se o Google Sign-In está habilitado';
+      } else if (errorString.contains('DEVELOPER_ERROR') ||
+          errorString.contains('10')) {
+        throw 'Erro de configuração do desenvolvedor. Verifique o SHA-1 no Firebase Console';
+      }
+      throw 'Erro ao fazer login com Google: $e';
+    }
+  }
 
-//       throw 'Erro ao fazer login com Google: $e';
-//     }
-//   }
+  // Logout
 
-//   // Logout
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 
-//   Future<void> signOut() async {
-//     await _auth.signOut();
-//   }
+  // Recuperação de senha
 
-//   // Recuperação de senha
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
 
-//   Future<void> sendPasswordResetEmail(String email) async {
-//     try {
-//       await _auth.sendPasswordResetEmail(email: email);
-//     } on FirebaseAuthException catch (e) {
-//       throw _handleAuthException(e);
-//     }
-//   }
+  // Tratamento de exceções do Firebase Auth
 
-//   // Tratamento de exceções do Firebase Auth
+  String _handleAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'weak-password':
+        return 'A senha fornecida é muito fraca.';
 
-//   String _handleAuthException(FirebaseAuthException e) {
-//     switch (e.code) {
-//       case 'weak-password':
-//         return 'A senha fornecida é muito fraca.';
+      case 'email-already-in-use':
+        return 'Já existe uma conta com este email.';
 
-//       case 'email-already-in-use':
-//         return 'Já existe uma conta com este email.';
+      case 'invalid-email':
+        return 'O email fornecido é inválido.';
 
-//       case 'invalid-email':
-//         return 'O email fornecido é inválido.';
+      case 'user-disabled':
+        return 'Esta conta foi desativada.';
 
-//       case 'user-disabled':
-//         return 'Esta conta foi desativada.';
+      case 'user-not-found':
+        return 'Não existe usuário com este email.';
 
-//       case 'user-not-found':
-//         return 'Não existe usuário com este email.';
+      case 'wrong-password':
+        return 'Senha incorreta.';
 
-//       case 'wrong-password':
-//         return 'Senha incorreta.';
+      case 'too-many-requests':
+        return 'Muitas tentativas. Tente novamente mais tarde.';
 
-//       case 'too-many-requests':
-//         return 'Muitas tentativas. Tente novamente mais tarde.';
-
-//       default:
-//         return 'Ocorreu um erro na autenticação: ${e.message}';
-//     }
-//   }
-// }
+      default:
+        return 'Ocorreu um erro na autenticação: ${e.message}';
+    }
+  }
+}

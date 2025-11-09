@@ -27,7 +27,7 @@ android {
         applicationId = "com.example.lumi"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23  // Requerido pelo firebase_auth
+        minSdk = flutter.minSdkVersion  // Requerido pelo firebase_auth
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

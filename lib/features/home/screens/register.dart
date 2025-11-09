@@ -11,15 +11,7 @@ import '../widgets/password_requirements.dart';
 import '../../../common/services/auth_service.dart';
 
 /// Tela de Cadastro do Lumi
-///
-/// **Pendências para implementação / integração com AuthService:**
-/// - Botão "Criar conta": chamar função já implementada `AuthService.registerWithEmail(...)`.
-///     - Validar formulário (_formKey.currentState!.validate())
-///     - Passar email e senha para a função
-///     - Tratar erros retornados (ex.: senha fraca, e-mail já cadastrado)
-///     - Redirecionar para tela principal após sucesso
-/// - Botão "Continuar com Google": chamar função já implementada `AuthService.signInWithGoogle()`.
-/// - Mensagens de erro e feedback visual podem ser exibidos com SnackBar ou dialog
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -161,25 +153,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     GoogleSignInButton(
                       label: 'Continuar com o Google',
                       onPressed: () async {
-                        // try {
-                        //   final authService = AuthService();
-                        //   await authService.signInWithGoogle();
-                        //   if (mounted) {
-                        //     Navigator.pushReplacementNamed(
-                        //       context,
-                        //       AppRoutes.moodEntry,
-                        //     );
-                        //   }
-                        // } catch (e) {
-                        //   if (mounted) {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(
-                        //         content: Text(e.toString()),
-                        //         backgroundColor: Colors.red,
-                        //       ),
-                        //     );
-                        //   }
-                        // }
+                        print('GoogleSignInButton pressed (register)');
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Iniciando login com Google...')),
+                          );
+                        }
+                        try {
+                          final authService = AuthService();
+                          await authService.signInWithGoogle();
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRoutes.moodEntry,
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
                       },
                     ),
                   ],
