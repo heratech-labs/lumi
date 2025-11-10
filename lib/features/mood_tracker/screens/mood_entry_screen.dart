@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
+import '../../../app/config/app_routes.dart';
 import '../../../common/services/date_formatter.dart';
+import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/form_fields/multiline_text_field.dart';
 import '../../../common/widgets/layout/welcome_header.dart';
 import '../../../common/widgets/text/screen_title.dart';
@@ -16,12 +18,23 @@ class MoodEntryScreen extends StatefulWidget {
 class _MoodEntryScreenState extends State<MoodEntryScreen> {
   late final TextEditingController _moodController;
   late final String _todayLabel;
+  bool _isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _moodController = TextEditingController();
+    _moodController.addListener(_updateButtonState);
     _todayLabel = DateFormatter.formatFullDate(DateTime.now());
+  }
+
+  void _updateButtonState() {
+    final isEnabled = _moodController.text.trim().isNotEmpty;
+    if (isEnabled != _isButtonEnabled) {
+      setState(() {
+        _isButtonEnabled = isEnabled;
+      });
+    }
   }
 
   @override
@@ -32,7 +45,7 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Obter nome do usuário do Firebase Auth
+    // Obtendo o usuário autenticado do Firebase
     final user = FirebaseAuth.instance.currentUser;
     final displayName = user?.displayName ?? 'Usuário';
     final firstName = displayName.split(' ').first;
@@ -76,6 +89,15 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                 hintText: 'Lorem ipsum...',
                 minLines: 5,
                 maxLines: 8,
+              ),
+              const SizedBox(height: 24),
+              PrimaryActionButton(
+                label: 'Continuar',
+                onPressed: _isButtonEnabled
+                    ? () {
+                        Navigator.pushNamed(context, AppRoutes.home);
+                      }
+                    : () {},
               ),
             ],
           ),
