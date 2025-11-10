@@ -12,7 +12,20 @@
           "package_name": "com.example.lumi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "731654279937-peic19vuqloffj59u4592mptsigcpi79.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lumi",
+            "certificate_hash": "8219403c1f7326e507816b932e8dca259ef82906"
+          }
+        },
+        {
+          "client_id": "731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDae3coq8h_dm3jP6yIXltQ69uIR_F5jzA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731654279937-mi0u42q61rd776h0gb8nldq3oecm4g6r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "731654279937-3mgsqka4ajc0srgm961ltbke78qkgrbg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lumi"
+              }
+            }
+          ]
         }
       }
     }
