@@ -1,13 +1,57 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../common/services/mood_service.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/buttons/secondary_button.dart';
 import '../../../common/widgets/images/lumi_logo.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
 
   @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  final MoodService _moodService = MoodService();
+  String? _lastMood;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastMood();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Recarrega os dados sempre que a tela voltar a aparecer
+    _loadLastMood();
+  }
+
+  Future<void> _loadLastMood() async {
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
+
+    final mood = await _moodService.getLastMood();
+
+    if (mounted) {
+      setState(() {
+        _lastMood = mood;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Obtém o usuário autenticado
+    final user = FirebaseAuth.instance.currentUser;
+    final displayName = user?.displayName ?? 'Usuário';
+    final email = user?.email ?? 'Não disponível';
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -25,26 +69,37 @@ class UserProfileScreen extends StatelessWidget {
                     child: const LumiLogo(width: 32),
                   ),
                   const SizedBox(width: 16),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Luccas Adelino Jordao Garcia',
-                          style: TextStyle(
+                          displayName,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF333333),
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Usuário com autismo',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                          ),
-                        ),
+                        const SizedBox(height: 4),
+                        _isLoading
+                            ? const SizedBox(
+                                height: 14,
+                                width: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Color(0xFF666666),
+                                ),
+                              )
+                            : Text(
+                                _lastMood ?? 'Nenhum registro ainda',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF666666),
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ],
                     ),
                   ),
@@ -75,27 +130,19 @@ class UserProfileScreen extends StatelessWidget {
                         ),
                         color: const Color(0xFFF5F5F5),
                       ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/profile_photo.png',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.person,
-                              size: 60,
-                              color: Color(0xFFCCCCCC),
-                            );
-                          },
-                        ),
+                      child: const Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Color(0xFFCCCCCC),
                       ),
                     ),
 
                     const SizedBox(height: 32),
 
                     // Informações do usuário
-                    _buildInfoItem('Nome:', 'Luccas Adelino Jordao Garcia'),
+                    _buildInfoItem('Nome:', displayName),
                     const SizedBox(height: 20),
-                    _buildInfoItem('Email:', 'luccas@gmail.com.br'),
+                    _buildInfoItem('Email:', email),
                     const SizedBox(height: 20),
                     _buildInfoItem('Idade:', '24 anos'),
                     const SizedBox(height: 20),
