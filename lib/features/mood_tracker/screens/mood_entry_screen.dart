@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app/config/app_routes.dart';
 import '../../../common/services/date_formatter.dart';
+import '../../../common/services/mood_service.dart';
 import '../../../common/widgets/buttons/primary_action_button.dart';
 import '../../../common/widgets/form_fields/multiline_text_field.dart';
 import '../../../common/widgets/layout/welcome_header.dart';
@@ -19,6 +20,8 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
   late final TextEditingController _moodController;
   late final String _todayLabel;
   bool _isButtonEnabled = false;
+  bool _isSaving = false;
+  final MoodService _moodService = MoodService();
 
   @override
   void initState() {
@@ -34,6 +37,41 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
       setState(() {
         _isButtonEnabled = isEnabled;
       });
+    }
+  }
+
+  Future<void> _saveMood() async {
+    final moodText = _moodController.text.trim();
+    if (moodText.isEmpty) return;
+
+    setState(() => _isSaving = true);
+
+    try {
+      await _moodService.saveMood(moodText);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registro salvo com sucesso! 💚'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        Navigator.pushNamed(context, AppRoutes.home);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao salvar: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
     }
   }
 
@@ -77,7 +115,7 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
               WelcomeHeader(userName: firstName, dateLabel: _todayLabel),
               const SizedBox(height: 32),
               Text(
-                'Como você está se sentindo hoje?',
+                'Ce tem problema?',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.grey.shade900,
@@ -86,18 +124,14 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
               const SizedBox(height: 14),
               MultilineTextField(
                 controller: _moodController,
-                hintText: 'Lorem ipsum...',
+                hintText: 'Digite aqui...',
                 minLines: 5,
                 maxLines: 8,
               ),
               const SizedBox(height: 24),
               PrimaryActionButton(
-                label: 'Continuar',
-                onPressed: _isButtonEnabled
-                    ? () {
-                        Navigator.pushNamed(context, AppRoutes.home);
-                      }
-                    : () {},
+                label: _isSaving ? 'Salvando...' : 'Continuar',
+                onPressed: _isButtonEnabled && !_isSaving ? _saveMood : () {},
               ),
             ],
           ),
